@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ERC7656 - Generalized Contract-Linked Services</title>
+    <title>ERC-7656 - Generalized Contract-Linked Services</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* Clean, developer-oriented styling */
@@ -258,7 +258,7 @@
 
 
 <header>
-    <h1>ERC7656</h1>
+    <h1>ERC-7656</h1>
     <p>Generalized Contract-Linked Services</p>
     <!-- Sub Navigation Menu -->
     <nav id="sub-nav">
@@ -277,31 +277,31 @@
     <section id="introduction">
         <h2>Introduction</h2>
         <p>
-            Welcome to ERC7656, a groundbreaking proposal that defines a factory capable of deploying generic services linked to specific contracts, such as ERC-4337 accounts or ERC-721 tokens (NFTs). These linked services extend the functionalities of the target contract, operating under the ownership of the contract's or NFT's owner without requiring modifications to the original contract's code.
+            Welcome to ERC-7656, a groundbreaking proposal that defines a factory capable of deploying generic services linked to specific contracts, such as ERC-4337 accounts or ERC-721 tokens (NFTs). These linked services extend the functionalities of the target contract, operating under the ownership of the contract's or NFT's owner without requiring modifications to the original contract's code.
         </p>
         <p>
-            Building upon the foundation laid by <a href="https://eips.ethereum.org/EIPS/eip-6551" style="color: #00bfa5;">ERC6551</a>, ERC7656 introduces a more flexible and generalized approach that enables extending existing contracts with new capabilities while maintaining backward compatibility with deployed instances.
+            Building upon the foundation laid by <a href="https://eips.ethereum.org/EIPS/eip-6551" target="_blank">ERC-6551</a>, ERC-7656 introduces a more flexible and generalized approach that enables extending existing contracts with new capabilities while maintaining backward compatibility with deployed instances.
         </p>
     </section>
 
     <section id="evolution">
-        <h2>The Evolution from ERC6551</h2>
+        <h2>The Evolution from ERC-6551</h2>
         <p>
-            ERC6551 set the stage by enabling NFTs to have associated smart contract accounts, effectively giving NFTs their own wallets. This breakthrough allowed for more dynamic interactions and functionalities. However, existing projects like token-bound accounts have two key limitations:
+            <a href="https://eips.ethereum.org/EIPS/eip-6551" target="_blank">ERC-6551</a> set the stage by enabling NFTs to have associated smart contract accounts, effectively giving NFTs their own wallets. This breakthrough allowed for more dynamic interactions and functionalities. However, existing projects like token-bound accounts have two key limitations:
         </p>
         <ul>
             <li>They often require deployed contracts to implement specific interfaces for handling assets and executing transactions, effectively mandating that the deployed contract must function as an account.</li>
             <li>They are restricted to NFTs, while many other contract types (particularly ERC-4337 accounts) could benefit from similar linking mechanisms to extend their functionalities.</li>
         </ul>
         <p>
-            ERC7656 proposes a more versatile factory specification that enables the deployment of proxies pointing to any contract that enhances the associated contract's capabilities, whether it's an NFT or an account contract.
+            ERC-7656 proposes a more versatile factory specification that enables the deployment of proxies pointing to any contract that enhances the associated contract's capabilities, whether it's an NFT or an account contract.
         </p>
     </section>
 
     <section id="solution">
-        <h2>ERC7656: A Generalized Solution</h2>
+        <h2>ERC-7656: A Generalized Solution</h2>
         <p>
-            ERC7656 reimagines the way contracts interact with services by removing unnecessary restrictions and embracing flexibility. Here's how:
+            ERC-7656 reimagines the way contracts interact with services by removing unnecessary restrictions and embracing flexibility. Here's how:
         </p>
         <ul>
             <li><strong>Universal Linkability:</strong> Enables services to be linked to any compatible contract type, not just NFTs, creating a unified approach to contract extension.</li>
@@ -313,7 +313,7 @@
     </section>
 
     <section id="benefits">
-        <h2>Why Choose ERC7656?</h2>
+        <h2>Why Choose ERC-7656?</h2>
         <ul>
             <li><strong>Universal Linkability:</strong> Link services to any compatible contract type, not just NFTs, creating a unified approach to contract extension.</li>
             <li><strong>Non-Invasive Enhancement:</strong> Add functionality to existing smart accounts without modifying the underlying contract.</li>
@@ -348,7 +348,7 @@
         </p>
         <ul>
             <li><strong>Core Behavior Modifications:</strong> When you need to change fundamental contract behaviors (like transfer mechanisms, ownership rules, or standard interfaces), creating a new ERC is the appropriate approach.</li>
-            <li><strong>Functional Extensions:</strong> When you want to add new capabilities without modifying core contract behavior, ERC7656 services provide a more efficient solution.</li>
+            <li><strong>Functional Extensions:</strong> When you want to add new capabilities without modifying core contract behavior, ERC-7656 services provide a more efficient solution.</li>
         </ul>
         
         <h3>Examples of When to Create New ERCs that propose changes in ERC-721</h3>
@@ -359,7 +359,7 @@
             <li><strong>Core Metadata Changes:</strong> When the fundamental structure of token metadata or URI handling needs modification.</li>
         </ul>
 
-        <h3>Examples of When to Create New ERCs that Use ERC7656 Services</h3>
+        <h3>Examples of When to Create New ERCs that Use ERC-7656 Services</h3>
         <ul>
             <li><strong>Real-World Asset Association:</strong> Link physical assets to NFTs through services that handle verification, ownership proofs, and legal compliance without changing the NFT's transfer mechanism.</li>
             <li><strong>Financial Capabilities:</strong> Add staking, lending, or revenue distribution features without modifying the core ERC-721 interface. Here the service could be approved to manage the NFT.</li>
@@ -372,12 +372,12 @@
             <li><strong>Cross-Chain Interactions:</strong> Facilitate cross-chain interoperability without modifying the NFT's standard behavior.</li>
             <li><strong>Game Mechanics and Assets:</strong> Integrate game-specific mechanics or attributes without altering the NFT standard.</li>
             <li><strong>Content Access Control:</strong> Manage access to exclusive content or features without changing the NFT's core functionality.</li>
-            <li><strong>Social Recovery Services</strong> Look for example in the <a href="https://github.com/erc7656/erc7656/blob/main/contracts/services/ERC7656SocialRecoveryService.sol" target="_blank">reference implementation</a> for an example of a service that can be used to recover the NFT.</li>
+            <li><strong>Social Recovery Services</strong> Look for example in the <a href="https://github.com/erc7656/erc7656/blob/main/contracts/services/ERC-7656SocialRecoveryService.sol" target="_blank">reference implementation</a> for an example of a service that can be used to recover the NFT.</li>
         </ul>
 
-        <h3>The ERC7656 Advantage</h3>
+        <h3>The ERC-7656 Advantage</h3>
         <p>
-            By using ERC7656 services for functional extensions, developers can:
+            By using ERC-7656 services for functional extensions, developers can:
         </p>
         <ul>
             <li><strong>Maintain Standard Compliance:</strong> Keep NFTs fully compatible with existing infrastructure, wallets, and marketplaces.</li>
@@ -391,7 +391,7 @@
             <strong>Conclusion:</strong>
         </p>
         <p>
-            ERC7656 doesn't discourage ERC creation—it encourages thoughtful decision-making about when to extend functionality versus when to modify core behavior. Use ERC7656 services for functional extensions that don't require core contract behavior changes (whether for NFTs, ERC-4337 accounts, ERC-1155 tokens, or any other contract type), and create new ERCs only when fundamental modifications to contract standards are necessary. This approach maintains the integrity of existing standards while enabling unlimited innovation through linked services across all contract types.
+            ERC-7656 doesn't discourage ERC creation—it encourages thoughtful decision-making about when to extend functionality versus when to modify core behavior. Use ERC-7656 services for functional extensions that don't require core contract behavior changes (whether for NFTs, ERC-4337 accounts, ERC-1155 tokens, or any other contract type), and create new ERCs only when fundamental modifications to contract standards are necessary. This approach maintains the integrity of existing standards while enabling unlimited innovation through linked services across all contract types.
         </p>
     </section>
 
@@ -399,7 +399,7 @@
     <section id="reference">
         <h2>Reference Implementation</h2>
         <p>
-            ERC7656 has an official reference implementation available on GitHub:
+            ERC-7656 has an official reference implementation available on GitHub:
         </p>
         <p>
             <a href="https://github.com/erc7656/erc7656" target="_blank">github.com/crunaprotocol/erc7656</a>
@@ -445,7 +445,7 @@
 
         <h3>Usage Instructions</h3>
         <p>
-            You can install ERC7656 as a dependency via npm:
+            You can install ERC-7656 as a dependency via npm:
         </p>
         <pre>
 npm install erc7656 @openzeppelin/contracts
@@ -459,10 +459,10 @@ npm install erc7656 @openzeppelin/contracts
     <section id="get-involved">
         <h2>Join the Movement</h2>
         <p>
-            ERC7656 is more than just a proposal—it's a unified approach to extending any contract type with new capabilities. By supporting both NFTs and smart accounts, ERC7656 creates a standardized way to enhance existing contracts without modification. We invite developers to collaborate, share ideas, and contribute to the evolution of contract extension technology.
+            ERC-7656 is more than just a proposal—it's a unified approach to extending any contract type with new capabilities. By supporting both NFTs and smart accounts, ERC-7656 creates a standardized way to enhance existing contracts without modification. We invite developers to collaborate, share ideas, and contribute to the evolution of contract extension technology.
         </p>
         <p>
-            Whether you're working with NFTs, ERC-4337 accounts, or other contract types, your insights and contributions are invaluable. Join the discussion, contribute to the codebase, or start building with ERC7656 today.
+            Whether you're working with NFTs, ERC-4337 accounts, or other contract types, your insights and contributions are invaluable. Join the discussion, contribute to the codebase, or start building with ERC-7656 today.
         </p>
         <a href="https://ethereum-magicians.org/t/variation-to-erc6551-to-deploy-any-kind-of-contract-linked-to-an-nft/19223" class="button">Join the Discussion</a>
         <a href="https://eips.ethereum.org/EIPS/eip-7656" class="button" style="margin-left: 10px;">Read the Proposal</a>
@@ -470,5 +470,5 @@ npm install erc7656 @openzeppelin/contracts
 </div>
 
 <footer>
-    <p>&copy; 2023+ @sullof</p>
+    <p>&copy; 2023+ Francesco Sullo (@sullof)</p>
 </footer>
