@@ -268,6 +268,7 @@
         <a href="#benefits">Benefits</a> |
         <a href="#erc-proliferation">ERC Proliferation</a> |
         <a href="#reference">Reference Implementation</a> |
+        <a href="#history">History</a> |
         <a href="#get-involved">Get Involved</a>
     </nav>
 </header>
@@ -454,6 +455,53 @@ npm install erc7656 @openzeppelin/contracts
             Look at the examples in the <a href="https://github.com/erc7656/erc7656/tree/main/examples" target="_blank">examples</a> folder for inspiration.
         </p>
         
+    </section>
+
+    <section id="history">
+        <h2>History and Acknowledgments</h2>
+        <p>
+            The story of ERC-7656 begins with ERC-6551. When I first read about ERC-6551, I was immediately struck by its innovative approach to extending NFT functionality. I suggested to the ERC-6551 team that they could extend the ERC6551Registry to be more generic, allowing it to create any type of service linked to NFTs, not just token-bound accounts. This would enable seamless extension of NFT functionalities beyond just account capabilities.
+        </p>
+        <p>
+            The team's response was thoughtful and understandable: they were focused on keeping ERC-6551 as simple as possible, and a more generic version of the registry might create confusion for implementers and users of token-bound accounts. Their priority was to establish a solid foundation for token-bound accounts specifically.
+        </p>
+        <p>
+            At some point, Jayden Windle (<a href="https://github.com/jaydenwindle" target="_blank">@jaydenwindle</a>) suggested that I create a new proposal. With his blessing and encouragement, I decided to pursue this idea as ERC-7656.
+        </p>
+        <p>
+            As I developed the proposal, I realized that with a small modification, it could be used to link generic services not only to contracts with IDs (like NFTs) but to a much broader set of contracts, including ERC-4337 smart accounts. This expanded the scope significantly and made ERC-7656 a truly universal solution for contract extension.
+        </p>
+        <p>
+            In drafting the ERC, I maintained all references to ERC-6551 until I had to move to Last Call. At that point, the EIP reviewers informed me that I could not move an ERC to Last Call (the step before finalization) while referencing another ERC that was not yet final. This required me to remove the direct references and use more generic references to token-bound accounts instead.
+        </p>
+        <p>
+            I want to be clear: I do not claim to have created ERC-7656 from scratch. ERC-7656 builds directly upon the groundbreaking work of ERC-6551. Here, I would like to explicitly thank all the contributors to ERC-6551:
+        </p>
+        <ul>
+            <li><a href="https://github.com/jaydenwindle" target="_blank">Jayden Windle (@jaydenwindle)</a></li>
+            <li>Benny Giang <a href="mailto:bg@futureprimitive.xyz">bg@futureprimitive.xyz</a></li>
+            <li>Steve Jang</li>
+            <li><a href="https://github.com/druzydowns" target="_blank">Druzy Downs (@druzydowns)</a></li>
+            <li><a href="https://github.com/huynhr" target="_blank">Raymond Huynh (@huynhr)</a></li>
+            <li>Alanah Lam <a href="mailto:alanah@futureprimitive.xyz">alanah@futureprimitive.xyz</a></li>
+            <li><a href="https://github.com/wwhchung" target="_blank">Wilkins Chung (@wwhchung)</a> <a href="mailto:wilkins@manifold.xyz">wilkins@manifold.xyz</a></li>
+            <li><a href="https://github.com/sullivph" target="_blank">Paul Sullivan (@sullivph)</a> <a href="mailto:paul.sullivan@manifold.xyz">paul.sullivan@manifold.xyz</a></li>
+            <li><a href="https://github.com/auryn-macmillan" target="_blank">Auryn Macmillan (@auryn-macmillan)</a></li>
+            <li><a href="https://github.com/jfschwarz" target="_blank">Jan-Felix Schwarz (@jfschwarz)</a></li>
+            <li><a href="https://github.com/k06a" target="_blank">Anton Bukov (@k06a)</a></li>
+            <li><a href="https://github.com/ZumZoom" target="_blank">Mikhail Melnik (@ZumZoom)</a></li>
+            <li><a href="https://github.com/jhweintraub" target="_blank">Josh Weintraub (@jhweintraub)</a> <a href="mailto:jhweintraub@gmail.com">jhweintraub@gmail.com</a></li>
+            <li><a href="https://github.com/RobAnon" target="_blank">Rob Montgomery (@RobAnon)</a> <a href="mailto:rob@revest.finance">rob@revest.finance</a></li>
+            <li><a href="https://github.com/vectorized" target="_blank">vectorized (@vectorized)</a></li>
+            <li><a href="https://github.com/vnmrtz" target="_blank">Víctor Martínez (@vnmrtz)</a></li>
+            <li><a href="https://github.com/0xadrii" target="_blank">Adrián Pajares (@0xadrii)</a></li>
+        </ul>
+        <p>
+            I would like to give special recognition to <a href="https://github.com/jaydenwindle" target="_blank">Jayden Windle</a> and <a href="https://github.com/vectorized" target="_blank">vectorized</a>, who worked on the ERC-6551 reference implementation. Their code served as the foundation that I modified to create the ERC-7656Factory reference implementation.
+        </p>
+        <p>
+            ERC-7656 stands on the shoulders of ERC-6551, and I am grateful to the entire ERC-6551 community for their pioneering work that made this proposal possible.
+        </p>
     </section>
 
     <section id="get-involved">
