@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ERC7656 - Generalized Contract-Linked Services</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Clean, developer-oriented styling */
+        :root {
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --text-muted: #666666;
+            --background: #ffffff;
+            --background-secondary: #f8f9fa;
+            --border: #e0e0e0;
+            --accent: #0066cc;
+            --accent-hover: #0052a3;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, footer {
+            background-color: var(--background-secondary);
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        header h1 {
+            margin: 20px 0 10px;
+            font-size: 2em;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        header p {
+            margin: 0 0 20px;
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+            color: var(--text-primary);
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        section h2 {
+            font-size: 1.5em;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            color: var(--text-primary);
+            margin-top: 2em;
+            margin-bottom: 1em;
+        }
+
+        section h3 {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        section h4 {
+            font-size: 1.1em;
+            color: var(--text-secondary);
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+
+        section p, section li {
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 1em;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            margin-bottom: 1em;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+        }
+
+        pre {
+            background-color: var(--background-secondary);
+            border: 1px solid var(--border);
+            padding: 15px;
+            overflow-x: auto;
+            border-radius: 3px;
+            color: var(--text-primary);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        /* Deployment details specific styling */
+        .deployment-info {
+            background-color: var(--background-secondary);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .deployment-info h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            font-size: 1.1em;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .deployment-info p {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .deployment-info code {
+            background-color: var(--background);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            word-break: break-all;
+            display: block;
+            margin: 8px 0;
+            line-height: 1.3;
+        }
+
+        .network-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .network-category {
+            background-color: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 15px;
+        }
+
+        .network-category h4 {
+            margin: 0 0 10px 0;
+            color: var(--text-primary);
+            font-size: 1em;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .network-category ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .network-category li {
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+        }
+
+        code {
+            background-color: var(--background-secondary);
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        footer p {
+            margin: 5px 0;
+            color: var(--text-muted);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sub Navigation Menu Styles */
+        #sub-nav {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #sub-nav a {
+            color: var(--accent);
+            margin: 0 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        #sub-nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments for sub navigation */
+        @media (max-width: 600px) {
+            #sub-nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            #sub-nav a {
+                margin: 5px;
+            }
+        }
+    </style>
+
+
+</head>
+<body>
+
+
+<header>
+    <h1>ERC7656</h1>
+    <p>Generalized Contract-Linked Services</p>
+    <!-- Sub Navigation Menu -->
+    <nav id="sub-nav">
+        <a href="#introduction">Introduction</a> |
+        <a href="#evolution">Evolution</a> |
+        <a href="#solution">Our Solution</a> |
+        <a href="#benefits">Benefits</a> |
+        <a href="#erc-proliferation">ERC Proliferation</a> |
+        <a href="#reference">Reference Implementation</a> |
+        <a href="#get-involved">Get Involved</a>
+    </nav>
+</header>
+
+
+<div class="container">
+    <section id="introduction">
+        <h2>Introduction</h2>
+        <p>
+            Welcome to ERC7656, a groundbreaking proposal that defines a factory capable of deploying generic services linked to specific contracts, such as ERC-4337 accounts or ERC-721 tokens (NFTs). These linked services extend the functionalities of the target contract, operating under the ownership of the contract's or NFT's owner without requiring modifications to the original contract's code.
+        </p>
+        <p>
+            Building upon the foundation laid by <a href="https://eips.ethereum.org/EIPS/eip-6551" style="color: #00bfa5;">ERC6551</a>, ERC7656 introduces a more flexible and generalized approach that enables extending existing contracts with new capabilities while maintaining backward compatibility with deployed instances.
+        </p>
+    </section>
+
+    <section id="evolution">
+        <h2>The Evolution from ERC6551</h2>
+        <p>
+            ERC6551 set the stage by enabling NFTs to have associated smart contract accounts, effectively giving NFTs their own wallets. This breakthrough allowed for more dynamic interactions and functionalities. However, existing projects like token-bound accounts have two key limitations:
+        </p>
+        <ul>
+            <li>They often require deployed contracts to implement specific interfaces for handling assets and executing transactions, effectively mandating that the deployed contract must function as an account.</li>
+            <li>They are restricted to NFTs, while many other contract types (particularly ERC-4337 accounts) could benefit from similar linking mechanisms to extend their functionalities.</li>
+        </ul>
+        <p>
+            ERC7656 proposes a more versatile factory specification that enables the deployment of proxies pointing to any contract that enhances the associated contract's capabilities, whether it's an NFT or an account contract.
+        </p>
+    </section>
+
+    <section id="solution">
+        <h2>ERC7656: A Generalized Solution</h2>
+        <p>
+            ERC7656 reimagines the way contracts interact with services by removing unnecessary restrictions and embracing flexibility. Here's how:
+        </p>
+        <ul>
+            <li><strong>Universal Linkability:</strong> Enables services to be linked to any compatible contract type, not just NFTs, creating a unified approach to contract extension.</li>
+            <li><strong>Non-Invasive Enhancement:</strong> Services can add functionality to existing smart accounts without modifying the underlying contract, maintaining compatibility with infrastructure like wallets and indexers.</li>
+            <li><strong>Backward Compatibility:</strong> Maintains compatibility with existing token-bound accounts while extending functionality to new use cases.</li>
+            <li><strong>Flexible Implementation:</strong> The <code>mode</code> parameter enables different linkage types (with or without token IDs) while ensuring consistent deterministic addressing.</li>
+            <li><strong>Unified Extension Mechanism:</strong> Provides a standardized approach for extending existing contracts with new capabilities, reducing the need for specialized implementations across different use cases.</li>
+        </ul>
+    </section>
+
+    <section id="benefits">
+        <h2>Why Choose ERC7656?</h2>
+        <ul>
+            <li><strong>Universal Linkability:</strong> Link services to any compatible contract type, not just NFTs, creating a unified approach to contract extension.</li>
+            <li><strong>Non-Invasive Enhancement:</strong> Add functionality to existing smart accounts without modifying the underlying contract.</li>
+            <li><strong>Backward Compatibility:</strong> Maintain compatibility with existing token-bound accounts while extending functionality to new use cases.</li>
+            <li><strong>Flexible Implementation:</strong> Use different linkage types through the <code>mode</code> parameter while ensuring consistent deterministic addressing.</li>
+            <li><strong>Unified Extension Mechanism:</strong> Standardized approach for extending existing contracts with new capabilities.</li>
+        </ul>
+        
+        <h3>Use Cases for ERC-4337 Smart Accounts</h3>
+        <ul>
+            <li><strong>Social Recovery Services:</strong> Deploy a social recovery mechanism linked to an existing ERC-4337 wallet that can restore access if credentials are lost.</li>
+            <li><strong>Customizable Permission Systems:</strong> Add granular permissions to an account (time-limited access, spending limits, multi-signature approvals) without rebuilding the account from scratch.</li>
+            <li><strong>Account Abstraction Extensions:</strong> Implement advanced features like batch transactions, gas sponsorship, or session keys as linked services.</li>
+            <li><strong>Identity and Reputation Services:</strong> Link verifiable credentials or reputation systems to accounts, enabling privacy-preserving identity verification.</li>
+        </ul>
+        
+        <h3>Use Cases for NFTs</h3>
+        <ul>
+            <li><strong>Enhanced Token Utility:</strong> Provide NFTs with financial capabilities like staking, lending, or revenue distribution.</li>
+            <li><strong>Dynamic Metadata Services:</strong> Enable NFT metadata to evolve based on on-chain activities without changing the NFT itself.</li>
+            <li><strong>Fractional Ownership:</strong> Implement fractional ownership mechanisms for high-value NFTs through linked contracts.</li>
+            <li><strong>Conditional Access Control:</strong> Create time-locked or challenge-based access to NFT-gated content or services.</li>
+            <li><strong>Real World Asset Management:</strong> Extend NFTs to represent and manage real-world assets (RWAs) by linking services that handle compliance, legal documentation, custody verification, transfer restrictions, and regulatory reporting.</li>
+        </ul>
+    </section>
+
+    <!-- New Section: ERC Proliferation -->
+    <section id="erc-proliferation">
+        <h2>When to Extend vs. When to Modify</h2>
+        <p>
+            The Ethereum ecosystem has witnessed a rapid increase in the number of ERC standards, each aiming to introduce new functionalities or address specific use cases. While innovation is essential, it's important to distinguish between two different approaches. <strong>For clarity, we'll use NFTs as our primary example throughout this section, but these principles apply equally to ERC-4337 accounts, and any other contract type where ERC-7656 is applicable.</strong>
+        </p>
+        <ul>
+            <li><strong>Core Behavior Modifications:</strong> When you need to change fundamental contract behaviors (like transfer mechanisms, ownership rules, or standard interfaces), creating a new ERC is the appropriate approach.</li>
+            <li><strong>Functional Extensions:</strong> When you want to add new capabilities without modifying core contract behavior, ERC7656 services provide a more efficient solution.</li>
+        </ul>
+        
+        <h3>Examples of When to Create New ERCs that propose changes in ERC-721</h3>
+        <ul>
+            <li><strong>Transfer Modifications:</strong> Like <a href="https://eips.ethereum.org/EIPS/eip-6892" style="color: #0066cc;">ERC-6892</a>, which modifies the transfer behavior to include additional parameters or validation logic.</li>
+            <li><strong>Ownership Changes:</strong> When ownership rules, delegation mechanisms, or access control need to be fundamentally altered.</li>
+            <li><strong>Interface Modifications:</strong> When standard functions like <code>ownerOf()</code>, <code>transferFrom()</code>, or <code>approve()</code> need different signatures or behaviors.</li>
+            <li><strong>Core Metadata Changes:</strong> When the fundamental structure of token metadata or URI handling needs modification.</li>
+        </ul>
+
+        <h3>Examples of When to Create New ERCs that Use ERC7656 Services</h3>
+        <ul>
+            <li><strong>Real-World Asset Association:</strong> Link physical assets to NFTs through services that handle verification, ownership proofs, and legal compliance without changing the NFT's transfer mechanism.</li>
+            <li><strong>Financial Capabilities:</strong> Add staking, lending, or revenue distribution features without modifying the core ERC-721 interface. Here the service could be approved to manage the NFT.</li>
+            <li><strong>Identity and Reputation Systems:</strong> Implement identity verification or reputation scoring linked to NFTs without changing ownership rules.</li>
+            <li><strong>Dynamic Metadata Services:</strong> Enable NFT metadata to evolve based on on-chain activities without altering the NFT's core metadata structure.</li>
+            <li><strong>Fractional Ownership:</strong> Facilitate shared ownership and distribution of benefits without modifying the NFT's ownership model.</li>
+            <li><strong>Governance and Voting Rights:</strong> Enable decentralized governance mechanisms without changing the NFT's fundamental behavior.</li>
+            <li><strong>Rental and Leasing:</strong> Create rental or leasing models without modifying the NFT's transfer or ownership mechanisms, approving the service to manage the NFT.</li>
+            <li><strong>Compliance and Regulatory Requirements:</strong> Attach compliance checks, KYC/AML procedures, or regulatory requirements without changing core NFT functionality.</li>
+            <li><strong>Cross-Chain Interactions:</strong> Facilitate cross-chain interoperability without modifying the NFT's standard behavior.</li>
+            <li><strong>Game Mechanics and Assets:</strong> Integrate game-specific mechanics or attributes without altering the NFT standard.</li>
+            <li><strong>Content Access Control:</strong> Manage access to exclusive content or features without changing the NFT's core functionality.</li>
+            <li><strong>Social Recovery Services</strong> Look for example in the <a href="https://github.com/erc7656/erc7656/blob/main/contracts/services/ERC7656SocialRecoveryService.sol" target="_blank">reference implementation</a> for an example of a service that can be used to recover the NFT.</li>
+        </ul>
+
+        <h3>The ERC7656 Advantage</h3>
+        <p>
+            By using ERC7656 services for functional extensions, developers can:
+        </p>
+        <ul>
+            <li><strong>Maintain Standard Compliance:</strong> Keep NFTs fully compatible with existing infrastructure, wallets, and marketplaces.</li>
+            <li><strong>Avoid Contract Size Limitations:</strong> Add unlimited functionality without hitting Ethereum's contract size limits.</li>
+            <li><strong>Enable Modular Development:</strong> Add or remove functionalities by deploying or updating services without impacting the core NFT contract.</li>
+            <li><strong>Preserve Upgradeability:</strong> Services can be updated independently to adapt to new requirements without affecting the NFT itself.</li>
+            <li><strong>Reduce Complexity:</strong> Keep the original NFT contracts simple and focused, reducing potential bugs and security vulnerabilities.</li>
+        </ul>
+        
+        <p>
+            <strong>Conclusion:</strong>
+        </p>
+        <p>
+            ERC7656 doesn't discourage ERC creation—it encourages thoughtful decision-making about when to extend functionality versus when to modify core behavior. Use ERC7656 services for functional extensions that don't require core contract behavior changes (whether for NFTs, ERC-4337 accounts, ERC-1155 tokens, or any other contract type), and create new ERCs only when fundamental modifications to contract standards are necessary. This approach maintains the integrity of existing standards while enabling unlimited innovation through linked services across all contract types.
+        </p>
+    </section>
+
+
+    <section id="reference">
+        <h2>Reference Implementation</h2>
+        <p>
+            ERC7656 has an official reference implementation available on GitHub:
+        </p>
+        <p>
+            <a href="https://github.com/erc7656/erc7656" target="_blank">github.com/crunaprotocol/erc7656</a>
+        </p>
+        <h3>Deployment Details</h3>
+        <div class="deployment-info">
+            <h4>Contract Bytecode</h4>
+            <p>The following bytecode has been deployed:</p>
+            <code>0x608060405234801561001057600080fd5b5061030b806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c806301ffc9a7146100465780632ae81fb11461006e578063b4cb3cbb14610099575b600080fd5b61005961005436600461021a565b6100ac565b60405190151581526020015b60405180910390f35b61008161007c366004610267565b6100e3565b6040516001600160a01b039091168152602001610065565b6100816100a7366004610267565b610152565b60006001600160e01b03198216634f11918560e11b14806100dd57506001600160e01b031982166301ffc9a760e01b145b92915050565b600060406024608c376e5af43d82803e903d91602b57fd5bf3606c5286605d52733d60ad80600a3d3981f3363d3d373d3d3d363d7360495282841760cc528160ec5260ff60005360b76055206035523060601b6001528560155260556000208060601b60601c60005260206000f35b600060406024608c376e5af43d82803e903d91602b57fd5bf3606c5286605d52733d60ad80600a3d3981f3363d3d373d3d3d363d7360495282841760cc528160ec5260ff60005360b76055206035523060601b600152856015526055600020803b61020a578660b760556000f5806101d25763d786d3936000526004601cfd5b80606c52508460cc528284897f5d6f1b27222bf34d576ad575c1c8749e981db502da9cd2e96e6e5258938099056080606ca46020606cf35b8060601b60601c60005260206000f35b60006020828403121561022c57600080fd5b81356001600160e01b03198116811461024457600080fd5b9392505050565b80356001600160a01b038116811461026257600080fd5b919050565b60008060008060008060c0878903121561028057600080fd5b6102898761024b565b9550602087013594506040870135935060608701356001600160a01b0319811681146102b457600080fd5b92506102c26080880161024b565b915060a08701359050929550929550929556fea2646970667358221220a95345c2c3cc528a43338da1b7fd0be8b9ba8af6c1e486ed761e02824da252ce64736f6c63430008160033</code>
+        </div>
+
+        <div class="deployment-info">
+            <h4>Deployment Address</h4>
+            <p>Contract deployed to 
+            <code>0x76565d90eeB1ce12D05d55D142510dBA634a128F</code>
+        </div>
+
+        <div class="deployment-info">
+            <h4>Deployment Salt</h4>
+            <p>Using the following salt:</p>
+            <code>0x7656000000000000000000000000000000000000000000000000000000001688</code>
+        </div>
+
+        <div class="deployment-info">
+            <h4>Supported Networks</h4>
+            <p>The deployment has been made on the following networks. More will come soon.</p>
+            <div class="network-list">
+                <div class="network-category">
+                    <h4>Mainnets</h4>
+                    <ul>
+                        <li>Ethereum</li>
+                    </ul>
+                </div>
+                <div class="network-category">
+                    <h4>Testnets</h4>
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <p><i>Notice that you can use it for your convenience, or deploy your own version where you prefer.</i></p>
+
+        <h3>Usage Instructions</h3>
+        <p>
+            You can install ERC7656 as a dependency via npm:
+        </p>
+        <pre>
+npm install erc7656 @openzeppelin/contracts
+    </pre>
+        <p>
+            Look at the examples in the <a href="https://github.com/erc7656/erc7656/tree/main/examples" target="_blank">examples</a> folder for inspiration.
+        </p>
+        
+    </section>
+
+    <section id="get-involved">
+        <h2>Join the Movement</h2>
+        <p>
+            ERC7656 is more than just a proposal—it's a unified approach to extending any contract type with new capabilities. By supporting both NFTs and smart accounts, ERC7656 creates a standardized way to enhance existing contracts without modification. We invite developers to collaborate, share ideas, and contribute to the evolution of contract extension technology.
+        </p>
+        <p>
+            Whether you're working with NFTs, ERC-4337 accounts, or other contract types, your insights and contributions are invaluable. Join the discussion, contribute to the codebase, or start building with ERC7656 today.
+        </p>
+        <a href="https://ethereum-magicians.org/t/variation-to-erc6551-to-deploy-any-kind-of-contract-linked-to-an-nft/19223" class="button">Join the Discussion</a>
+        <a href="https://eips.ethereum.org/EIPS/eip-7656" class="button" style="margin-left: 10px;">Read the Proposal</a>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2023+ Cruna</p>
+</footer>
