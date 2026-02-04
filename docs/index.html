@@ -267,6 +267,7 @@
         <a href="#solution">Our Solution</a> |
         <a href="#benefits">Benefits</a> |
         <a href="#erc-proliferation">ERC Proliferation</a> |
+        <a href="#specification">Specification</a> |
         <a href="#reference">Reference Implementation</a> |
         <a href="#history">History</a> |
         <a href="#get-involved">Get Involved</a>
@@ -278,7 +279,7 @@
     <section id="introduction">
         <h2>Introduction</h2>
         <p>
-            Welcome to ERC-7656, a proposal that defines a factory capable of deploying generic services linked to specific contracts, such as ERC-4337 accounts or ERC-721 tokens (NFTs). These linked services extend the functionalities of the target contract, operating under the ownership of the contract's or NFT's owner without requiring modifications to the original contract's code.
+            Welcome to ERC-7656, a finalized Ethereum standard that defines a factory capable of deploying generic services linked to specific contracts, such as ERC-4337 accounts or ERC-721 tokens (NFTs). These linked services extend the functionalities of the target contract, operating under the ownership of the contract's or NFT's owner without requiring modifications to the original contract's code.
         </p>
         <p>
             Building upon the foundation laid by <a href="https://eips.ethereum.org/EIPS/eip-6551" target="_blank">ERC-6551</a>, ERC-7656 introduces a more flexible and generalized approach that enables extending existing contracts with new capabilities while maintaining backward compatibility with deployed instances.
@@ -396,6 +397,103 @@
         </p>
     </section>
 
+    <section id="specification">
+        <h2>Specification</h2>
+        <p>
+            The following summarizes the core technical specification of ERC-7656. The complete specification is available in the <a href="https://eips.ethereum.org/EIPS/eip-7656" target="_blank">official EIP</a>.
+        </p>
+
+        <h3>Factory Interface</h3>
+        <p>
+            Any ERC-7656 factory MUST implement the <code>IERC7656Factory</code> interface. The interface ID is <code>0x9e23230a</code>.
+        </p>
+        <pre>
+interface IERC7656Factory {
+  event Created(
+    address contractAddress,
+    address indexed implementation,
+    bytes32 salt,
+    uint256 chainId,
+    bytes12 mode,
+    address indexed linkedContract,
+    uint256 indexed linkedId
+  );
+
+  error CreationFailed();
+
+  function create(
+    address implementation,
+    bytes32 salt,
+    uint256 chainId,
+    bytes12 mode,
+    address linkedContract,
+    uint256 linkedId
+  ) external returns (address);
+
+  function compute(
+    address implementation,
+    bytes32 salt,
+    uint256 chainId,
+    bytes12 mode,
+    address linkedContract,
+    uint256 linkedId
+  ) external view returns (address service);
+}</pre>
+        <p>
+            <strong>create</strong> deploys a new linked service (an ERC-1167 minimal proxy) and returns its address. It MUST revert with <code>CreationFailed</code> if deployment fails. <strong>compute</strong> returns the deterministic address of the service without deploying it, so addresses can be computed off-chain or before deployment.
+        </p>
+
+        <h3>Linking Modes</h3>
+        <p>
+            The <code>mode</code> parameter selects how the linked contract is interpreted. ERC-7656 defines two standard modes:
+        </p>
+        <pre>
+bytes12 constant NO_LINKED_ID = 0x000000000000000000000001;
+bytes12 constant LINKED_ID   = 0x000000000000000000000000;</pre>
+        <ul>
+            <li><strong>LINKED_ID (0x0000…0000)</strong> — Used when linking a service to an NFT or any contract that uses a token/entity ID. Compatible with existing token-bound account systems.</li>
+            <li><strong>NO_LINKED_ID (0x0000…0001)</strong> — Used when linking a service to a contract that does not use an ID (e.g. an ERC-4337 account). The <code>linkedId</code> parameter is still present for interface consistency but SHOULD be zero unless used for service-specific data.</li>
+        </ul>
+        <p>
+            The 12-byte <code>mode</code> allows future extensions (e.g. other linkage patterns) without changing the interface.
+        </p>
+
+        <h3>Deployment Requirements</h3>
+        <p>
+            Each linked service MUST be deployed as an <a href="https://eips.ethereum.org/EIPS/eip-1167" target="_blank">ERC-1167</a> minimal proxy with immutable data appended to the bytecode. The structure is:
+        </p>
+        <pre>
+ERC-1167 Header                 (10 bytes)
+implementation (address)       (20 bytes)
+ERC-1167 Footer                 (15 bytes)
+salt (bytes32)                  (32 bytes)
+chainId (uint256)               (32 bytes)
+mode (bytes12)                  (12 bytes)
+linkedContract (address)        (20 bytes)
+linkedId (uint256)              (32 bytes)
+
+Total: 183 bytes</pre>
+        <h3>Service Interface</h3>
+        <p>
+            Linked services SHOULD implement <code>IERC7656Service</code> so that the link data can be read by integrators and other contracts. The interface ID is <code>0x7e110a1d</code>.
+        </p>
+        <pre>
+interface IERC7656Service {
+  function linkedData() external view
+    returns (uint256 chainId, bytes12 mode, address linkedContract, uint256 linkedId);
+}</pre>
+        <p>
+            <strong>linkedData()</strong> returns the four immutable values appended to the proxy bytecode at deployment: <code>chainId</code>, <code>mode</code>, <code>linkedContract</code>, and <code>linkedId</code>. Implementations typically read these by using <code>extcodecopy</code> to read the last 96 bytes (0x60) of the contract's bytecode and decoding them. This allows the service to know which contract and (for NFTs) which token ID it is linked to, and on which chain it was deployed.
+        </p>
+        <p>
+            When implementing a linked service, developers SHOULD consider the following patterns (see the <a href="https://eips.ethereum.org/EIPS/eip-7656" target="_blank">EIP</a> for full details):
+        </p>
+        <ul>
+            <li><strong>Ownership verification</strong> — Services SHOULD verify that operations are authorized by the current owner of the linked contract or token (e.g. for <code>LINKED_ID</code>, the <code>ownerOf(tokenId)</code> on the linked contract).</li>
+            <li><strong>Mode-specific logic</strong> — Services SHOULD branch on <code>mode</code> to handle NFT-linked (<code>LINKED_ID</code>) vs account-linked (<code>NO_LINKED_ID</code>) cases correctly (e.g. resolving "owner" from the NFT vs from the account contract).</li>
+            <li><strong>Cross-chain awareness</strong> — Services SHOULD check that the current <code>block.chainid</code> matches the stored <code>chainId</code> to avoid cross-chain replay or misuse.</li>
+        </ul>
+    </section>
 
     <section id="reference">
         <h2>Reference Implementation</h2>
@@ -507,7 +605,7 @@ npm install erc7656 @openzeppelin/contracts
     <section id="get-involved">
         <h2>Join the Movement</h2>
         <p>
-            ERC-7656 is more than just a proposal—it's a unified approach to extending any contract type with new capabilities. By supporting both NFTs and smart accounts, ERC-7656 creates a standardized way to enhance existing contracts without modification. We invite developers to collaborate, share ideas, and contribute to the evolution of contract extension technology.
+            ERC-7656 is a finalized standard—a unified approach to extending any contract type with new capabilities. By supporting both NFTs and smart accounts, ERC-7656 creates a standardized way to enhance existing contracts without modification. We invite developers to collaborate, share ideas, and contribute to the evolution of contract extension technology.
         </p>
         <p>
             Whether you're working with NFTs, ERC-4337 accounts, or other contract types, your insights and contributions are invaluable. Join the discussion, contribute to the codebase, or start building with ERC-7656 today.
@@ -518,5 +616,5 @@ npm install erc7656 @openzeppelin/contracts
 </div>
 
 <footer>
-    <p>&copy; 2023+ Francesco Sullo (<a href="https://github.com/sullof" target="_blank">@sullof</a>)</p>
+    <p>&copy; 2023+ <a href="https://github.com/sullof" target="_blank">Francesco Sullo (@sullof</a>)</p>
 </footer>
